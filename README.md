@@ -1,5 +1,23 @@
 # coding-test
-代码测试
+代码测试 <br/>
+Stap 1: For a given string that only contains alphabet characters a-z, if 3 or more consecutive characters are identical, remove them from the string. Repeat this process until there is no more than 3 identical characters sitting besides each other. <br/>
+Example:   <br/>
+Input: aabcccbbad  <br/>
+Output:  <br/>
+-> aabbbad  <br/>
+-> aaad  <br/>
+-> d <br/>
+
+Stage 2: Instead of removing the consecutively identical characters, replace them with a single character that comes before it alphabetically <br/>
+Example:  <br/>
+ccc -> b  <br/>
+bbb -> a  <br/>
+
+Input: abcccbad  <br/>
+Output:  <br/>
+-> abbbad, ccc is replaced by b  <br/>
+-> aaad, bbb is replaced by a  <br/>
+-> d <br/>
 
 # 版本
 JDK 21 <br/>
