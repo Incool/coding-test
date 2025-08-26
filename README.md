@@ -1,6 +1,6 @@
 # coding-test
-代码测试 <br/>
-Stap 1: For a given string that only contains alphabet characters a-z, if 3 or more consecutive characters are identical, remove them from the string. Repeat this process until there is no more than 3 identical characters sitting besides each other. <br/>
+需求 <br/>
+Stage 1: For a given string that only contains alphabet characters a-z, if 3 or more consecutive characters are identical, remove them from the string. Repeat this process until there is no more than 3 identical characters sitting besides each other. <br/>
 Example:   <br/>
 Input: aabcccbbad  <br/>
 Output:  <br/>
