@@ -1,5 +1,5 @@
 # coding-test
-需求 <br/>
+## 需求一 <br/>
 Stage 1: For a given string that only contains alphabet characters a-z, if 3 or more consecutive characters are identical, remove them from the string. Repeat this process until there is no more than 3 identical characters sitting besides each other. <br/>
 Example:   <br/>
 Input: aabcccbbad  <br/>
@@ -18,6 +18,27 @@ Output:  <br/>
 -> abbbad, ccc is replaced by b  <br/>
 -> aaad, bbb is replaced by a  <br/>
 -> d <br/>
+
+## 需求二 
+-Apply TDD way in coding <br/>
+### Part1：
+Write a program which supports 2 functions. <br/>
+First function -init <br/>
+A initialize API which take a list of data. <br/>
+Second api - contains.str -> bool <br/>
+a function which take a string as parameter and return either true or false. <br/>
+it should check whether the provided string is one of the item provided in init <br/>
+Sample function <br/>
+init ["cat", "dog", "bird", "blur"] -> void / object <br/>
+contains "cat"-> true  <br/>
+contains "human"->false
+### Part2：
+We need to allow user input wildcard in contains api. <br/>
+The symbol is * and can only match any 1 character only <br/>
+Sample input / output <br/>
+init ["cat", "dog", "bird", "blur"] -> void / object <br/>
+ contains."*at"-> true  <br/>
+ contains."b*t"->false  <br/>
 
 # 版本
 JDK 21 <br/>
