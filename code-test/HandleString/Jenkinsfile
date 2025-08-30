@@ -18,11 +18,7 @@ pipeline {
         // 构建
         stage('Build') {
             steps {
-                def codeDir = "${env.WORKSPACE}/code-test/HandleString"
-                dir(codeDir) {
-                    sh 'mvn clean install'
-                }
-//                 sh 'cd code-test/HandleString && mvn clean install'
+                sh 'cd code-test/HandleString && mvn clean install'
             }
         }
         // 部署
