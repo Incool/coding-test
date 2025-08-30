@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven'  // 需要与Jenkins全局配置的中Maven的名称一致
+        jdk 'JDK21'  // 需要与Jenkins全局配置的中JDK的名称一致
+    }
+    environment {
+
+    }
+    stages {
+        // 检出代码
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/Incool/coding-test.git',
+                    branch: 'master'
+            }
+        }
+        // 构建
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+        // 部署
+        stage('Deploy') {
+            steps {
+                echo 'Starting Deploy...'
+                sh '''
+                    cd /root/app &&
+                    chmod +x ExecScript.sh &&
+                    ./ExecScript.sh
+                   '''
+                echo 'Deploy Successful!!!'
+            }
+        }
+    }
+}
