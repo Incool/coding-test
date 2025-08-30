@@ -4,9 +4,6 @@ pipeline {
         maven 'Maven'  // 需要与Jenkins全局配置的中Maven的名称一致
         jdk 'JDK21'  // 需要与Jenkins全局配置的中JDK的名称一致
     }
-//     environment {
-//
-//     }
     stages {
         // 检出代码
         stage('Checkout') {
@@ -25,11 +22,26 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Starting Deploy...'
-                sh '''
-                    cd /root/app &&
-                    chmod +x ExecScript.sh &&
-                    ./ExecScript.sh
-                   '''
+                // 使用Publish Over SSH
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: '192.168.0.41-项目服务器',
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: '**/HandleString*.jar',
+                                    removePrefix: 'code-test/HandleString/target',
+                                    remoteDirectory: ''
+                                )
+                            ],
+                             execCommand: '''
+                                            cd /root/app &&
+                                            chmod +x ExecScript.sh &&
+                                            ./ExecScript.sh
+                                           '''
+                        )
+                    ]
+                )
                 echo 'Deploy Successful!!!'
             }
         }
