@@ -4,9 +4,9 @@ pipeline {
         maven 'Maven'  // 需要与Jenkins全局配置的中Maven的名称一致
         jdk 'JDK21'  // 需要与Jenkins全局配置的中JDK的名称一致
     }
-    environment {
-
-    }
+//     environment {
+//
+//     }
     stages {
         // 检出代码
         stage('Checkout') {
