@@ -24,8 +24,8 @@ pipeline {
                 echo 'Starting Deploy...'
                 // 1.使用scp
                 sh '''
-                    scp -o StrictHostKeyChecking=no code-test/HandleString/target/*.jar root@192.168.0.41:/root/app/
-                    ssh -o StrictHostKeyChecking=no root@192.168.0.41 '
+                    scp -o StrictHostKeyChecking=no code-test/HandleString/target/*.jar deployer@192.168.0.41:/root/app/
+                    ssh -o StrictHostKeyChecking=no deployer@192.168.0.41 '
                                     cd /root/app &&
                                     chmod +x ExecScript.sh &&
                                     ./ExecScript.sh
