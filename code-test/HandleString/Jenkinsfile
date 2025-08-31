@@ -31,14 +31,14 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: '**/HandleString*.jar',
                                     removePrefix: 'code-test/HandleString/target',
-                                    remoteDirectory: ''
+                                    remoteDirectory: '',
+                                    execCommand: '''
+                                                    cd /root/app &&
+                                                    chmod +x ExecScript.sh &&
+                                                    ./ExecScript.sh
+                                                 '''
                                 )
-                            ],
-                             execCommand: '''
-                                            cd /root/app &&
-                                            chmod +x ExecScript.sh &&
-                                            ./ExecScript.sh
-                                           '''
+                            ]
                         )
                     ]
                 )
