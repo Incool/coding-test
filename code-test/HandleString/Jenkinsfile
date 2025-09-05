@@ -43,8 +43,7 @@ pipeline {
 
                     docker.build(
                       fullImageName,
-                      "--build-arg BUILD_DATE=${currentBuild.timeInMillis}",
-                      "./code-test/HandleString"
+                      "--build-arg BUILD_DATE=${currentBuild.timeInMillis} ./code-test/HandleString"
                     )
                 }
             }
