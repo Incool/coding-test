@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     // 推荐：先定义镜像名称变量，避免内联 GString 作为参数直接传入
-                    def fullImageName = "${IMAGE_NAME}:${IMAGE_TAG}"
+                    def fullImageName = env.IMAGE_NAME + ":" + env.IMAGE_TAG
 
                     docker.build(
                       fullImageName,
