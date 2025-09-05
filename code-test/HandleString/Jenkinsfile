@@ -1,9 +1,23 @@
 pipeline {
     agent any
+
+    environment {
+        // Harbor 配置
+        HARBOR_REGISTRY = "192.168.0.47"
+        HARBOR_PROJECT = "wordpress"
+        IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/handlestring"
+        IMAGE_TAG = "1.0"
+
+        // K8S 配置
+        KUBECONFIG_CRED_ID = "kubeconfig"  // Jenkins 凭据 ID（类型：Secret File）
+        NAMESPACE = "springboot"
+    }
+
     tools {
         maven 'Maven'  // 需要与Jenkins全局配置的中Maven的名称一致
         jdk 'JDK21'  // 需要与Jenkins全局配置的中JDK的名称一致
     }
+
     stages {
         // 检出代码
         stage('Checkout') {
@@ -12,38 +26,65 @@ pipeline {
                     branch: 'master'
             }
         }
-        // 构建
-        stage('Build') {
+
+        // Maven 打包
+        stage('Build with Maven') {
             steps {
-                sh 'cd code-test/HandleString && mvn clean install'
+                sh 'cd code-test/HandleString && mvn clean package -DskipTests'
             }
         }
-        // 部署
-        stage('Deploy') {
+
+        //构建Docker 镜像
+        stage('Build Docker Image') {
             steps {
-                echo 'Starting Deploy...'
-                // 2.使用Publish Over SSH
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: '192.168.0.41-项目服务器',
-                            transfers: [
-                                sshTransfer(
-                                    sourceFiles: '**/HandleString*.jar',
-                                    removePrefix: 'code-test/HandleString/target',
-                                    remoteDirectory: '',
-                                    execCommand: '''
-                                                    cd /root/app &&
-                                                    chmod +x ExecScript.sh &&
-                                                    ./ExecScript.sh
-                                                 '''
-                                )
-                            ]
-                        )
-                    ]
-                )
-                echo 'Deploy Successful!!!'
+                script {
+                    docker.build(
+                      "${IMAGE_NAME}:${IMAGE_TAG}",
+                      "--build-arg BUILD_DATE=${currentBuild.timeInMillis}",
+                      "./code-test/HandleString"
+                    )
+                }
             }
+        }
+
+        // 推送Harbor仓库
+        stage('Push to Harbor') {
+            steps {
+                // 获取 Harbor 凭据
+                withCredentials([usernamePassword(
+                    credentialsId: 'harbor-creds',
+                    usernameVariable: 'HARBOR_USER',
+                    passwordVariable: 'HARBOR_PWD'
+                )]) {
+                    sh "docker login ${HARBOR_REGISTRY} -u ${HARBOR_USER} -p ${HARBOR_PWD}"
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker logout ${HARBOR_REGISTRY}"
+                }
+            }
+        }
+
+        // 部署K8S
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // 使用 kubeconfig 操作 K8S
+                    withKubeConfig(credentialsId: KUBECONFIG_CRED_ID, serverUrl: "https://192.168.0.50:6443") {
+                        sh """
+                            kubectl apply -f Deployment.yaml -n ${NAMESPACE}
+                            kubectl rollout status deployment/handlestring-deployment -n ${NAMESPACE} --timeout=60s
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '部署成功！访问地址：http://192.168.0.50:30080'
+        }
+        failure {
+            echo '部署失败，请检查日志。'
         }
     }
 }
