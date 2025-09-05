@@ -69,12 +69,10 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // 确保命名空间存在
-                    sh "kubectl get namespace ${NAMESPACE} || kubectl create namespace ${NAMESPACE}"
-
                     // 使用 kubeconfig 操作 K8S
                     withKubeConfig(credentialsId: KUBECONFIG_CRED_ID, serverUrl: "https://192.168.0.50:6443") {
                         sh """
+                            sh "kubectl get namespace ${NAMESPACE} || kubectl create namespace ${NAMESPACE}"
                             kubectl apply -f Deployment.yaml -n ${NAMESPACE}
                             kubectl rollout status deployment/handlestring-deployment -n ${NAMESPACE} --timeout=60s
                         """
