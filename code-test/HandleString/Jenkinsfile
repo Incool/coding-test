@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'bitnami/kubectl:latest'  // 运行环境带 kubectl
-            args '-u root:root'  // 需要 root 权限时可用
-        }
-    }
+    agent any
 
     environment {
         // Harbor 配置
