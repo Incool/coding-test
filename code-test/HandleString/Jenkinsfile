@@ -67,6 +67,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
+                    // 确保命名空间存在
+                    sh "kubectl get namespace ${NAMESPACE} || kubectl create namespace ${NAMESPACE}"
+
                     // 使用 kubeconfig 操作 K8S
                     withKubeConfig(credentialsId: KUBECONFIG_CRED_ID, serverUrl: "https://192.168.0.50:6443") {
                         sh """
@@ -81,10 +84,10 @@ pipeline {
 
     post {
         success {
-            echo '部署成功！访问地址：http://192.168.0.50:30080'
+            echo '✅ 部署成功！访问地址：http://192.168.0.50:3008'
         }
         failure {
-            echo '部署失败，请检查日志。'
+            echo '❌ 部署失败，请检查日志。'
         }
     }
 }
