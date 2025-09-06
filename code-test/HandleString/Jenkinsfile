@@ -84,7 +84,8 @@ pipeline {
 
     post {
         success {
-            echo '✅ 部署成功！访问地址：http://192.168.0.50:30080'
+            echo '✅ 部署成功！'
+            echo '例如：http://192.168.0.50:30080/api/v1/processor/replaceHandle?input=abcccbad'
         }
         failure {
             echo '❌ 部署失败，请检查日志。'
