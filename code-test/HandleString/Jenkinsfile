@@ -73,7 +73,7 @@ pipeline {
                     withKubeConfig(credentialsId: KUBECONFIG_CRED_ID, serverUrl: "https://192.168.0.50:6443") {
                         sh """
                             kubectl get namespace ${NAMESPACE} || kubectl create namespace ${NAMESPACE}
-                            kubectl apply -f Deployment.yaml -n ${NAMESPACE}
+                            kubectl apply -f code-test/HandleString/Deployment.yaml -n ${NAMESPACE}
                             kubectl rollout status deployment/handlestring-deployment -n ${NAMESPACE} --timeout=60s
                         """
                     }
