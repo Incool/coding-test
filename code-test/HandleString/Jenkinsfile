@@ -16,6 +16,7 @@ pipeline {
     tools {
         maven 'Maven'  // 需要与Jenkins全局配置的中Maven的名称一致
         jdk 'JDK21'  // 需要与Jenkins全局配置的中JDK的名称一致
+        git 'Git' // 需要与Jenkins全局配置的中Git的名称一致
     }
 
     stages {
