@@ -74,7 +74,7 @@ pipeline {
                         sh """
                             kubectl get namespace ${NAMESPACE} || kubectl create namespace ${NAMESPACE}
                             kubectl apply -f code-test/HandleString/Deployment.yaml -n ${NAMESPACE}
-                            kubectl rollout status deployment/handlestring-deployment -n ${NAMESPACE} --timeout=60s
+                            kubectl rollout status deployment/handlestring-deployment -n ${NAMESPACE} --timeout=120s
                         """
                     }
                 }
