@@ -6,7 +6,7 @@ pipeline {
         HARBOR_REGISTRY = "192.168.0.47"
         HARBOR_PROJECT = "wordpress"
         IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/handlestring"
-        IMAGE_TAG = "latest"
+        IMAGE_TAG = "${BUILD_NUMBER}" // 每次构建号作为镜像 tag（唯一）
 
         // K8S 配置
         KUBECONFIG_CRED_ID = "kubeconfig"  // Jenkins 凭据 ID（类型：Secret File）
@@ -40,8 +40,7 @@ pipeline {
             steps {
                 script {
                     // 推荐：先定义镜像名称变量，避免内联 GString 作为参数直接传入
-                    def fullImageName = env.IMAGE_NAME + ":" + env.IMAGE_TAG
-
+                    def fullImageName = "${IMAGE_NAME}:${IMAGE_TAG}"
                     docker.build(
                       fullImageName,
                       "--build-arg BUILD_DATE=${currentBuild.timeInMillis} ./code-test/HandleString"
@@ -73,8 +72,17 @@ pipeline {
                     // 使用 kubeconfig 操作 K8S
                     withKubeConfig(credentialsId: KUBECONFIG_CRED_ID, serverUrl: "https://192.168.0.50:6443") {
                         sh """
+                            # 检查命名空间是否存在，不存在则创建
                             kubectl get namespace ${NAMESPACE} || kubectl create namespace ${NAMESPACE}
-                            kubectl apply -f code-test/HandleString/Deployment.yaml -n ${NAMESPACE}
+
+                            # 替换镜像 tag 并应用
+                            # sed 是流编辑器，用来做文本替换, 例如: s#A#B#g 表示把字符串 A 全部替换成 B
+                            # 在这里就是：把 Deployment.yaml 中的占位符 __IMAGE_TAG__ 替换成 Jenkins 环境变量 ${IMAGE_TAG} 的值
+                            # |(管道)： 把 sed 命令的输出结果 传递给下一个命令
+                            # -f -：这里的 - 很重要，表示 从标准输入读取配置文件，而不是从磁盘文件读取
+                            sed "s#__IMAGE_TAG__#${IMAGE_TAG}#g" code-test/HandleString/Deployment.yaml | kubectl apply -n ${NAMESPACE} -f -
+
+                            # 等待滚动更新完成
                             kubectl rollout status deployment/handlestring-deployment -n ${NAMESPACE} --timeout=120s
                         """
                     }
