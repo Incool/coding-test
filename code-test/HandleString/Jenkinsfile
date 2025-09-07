@@ -83,7 +83,7 @@ pipeline {
                             sed "s#__IMAGE_TAG__#${IMAGE_TAG}#g" code-test/HandleString/Deployment.yaml | kubectl apply -n ${NAMESPACE} -f -
 
                             # 等待滚动更新完成
-                            kubectl rollout status deployment/handlestring-deployment -n ${NAMESPACE} --timeout=120s
+                            kubectl rollout status deployment/handlestring-deployment -n ${NAMESPACE} --timeout=300s
                         """
                     }
                 }

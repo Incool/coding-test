@@ -30,14 +30,14 @@ spec:
             httpGet:
               path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 60    # 应用启动预热时间
+            initialDelaySeconds: 30    # 应用启动预热时间
             periodSeconds: 10          # 探测周期
             failureThreshold: 3        # 连续失败次数后重启容器
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 20
             periodSeconds: 5
             failureThreshold: 3
 ---
