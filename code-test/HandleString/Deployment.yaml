@@ -26,20 +26,20 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
-#          livenessProbe:
-#            httpGet:
-#              path: /actuator/health/liveness
-#              port: 8080
-#            initialDelaySeconds: 180    # 应用启动预热时间
-#            periodSeconds: 15          # 探测周期
-#            failureThreshold: 5        # 连续失败次数后重启容器
-#          readinessProbe:
-#            httpGet:
-#              path: /actuator/health/readiness
-#              port: 8080
-#            initialDelaySeconds: 120
-#            periodSeconds: 15
-#            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60    # 应用启动预热时间
+            periodSeconds: 10          # 探测周期
+            failureThreshold: 3        # 连续失败次数后重启容器
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            failureThreshold: 3
 ---
 apiVersion: v1
 kind: Service
