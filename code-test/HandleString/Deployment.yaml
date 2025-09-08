@@ -47,7 +47,7 @@ metadata:
   name: handlestring-service
   namespace: springboot
 spec:
-  type: NodePort
+  type: ClusterIP  # 推荐：由 Ingress Controller 访问
   selector:
     app: handlestring
   ports:
