@@ -54,4 +54,4 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 30080
+      #nodePort: 30080  # 可选，但必须在 30000~32767 范围内 （type: NodePort，则需要配置这一行）
