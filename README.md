@@ -59,3 +59,10 @@ http://localhost:8080/api/v1/processor/replaceHandle?input=abcccbad
 ```
 查看单元测试覆盖率路径：~\code-test\HandleString\target\site\jacoco\index.html
 <img width="1134" height="219" alt="40c3cb6e-86f2-4c03-8edf-89c09d6b8e0c" src="https://github.com/user-attachments/assets/2f67c865-5272-4445-a171-196cdafbb513" />
+
+# 下面的没写单元测试
+## 添加 Spring event
+详情请看 com.handlestring.service.event 目录下
+
+## 添加 静态代理以及动态代理（JDK、CGLib）
+详情请看 com.handlestring.service.proxy 目录下
